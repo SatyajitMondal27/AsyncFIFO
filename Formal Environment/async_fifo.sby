@@ -1,0 +1,25 @@
+[options]
+# Proof mode: bmc = Bounded Model Checking
+# Searches all input sequences up to 'depth' clock steps
+mode prove
+
+
+# How many steps to unroll. The full-flag bug manifests in a few pushes.
+depth 20
+multiclock on
+
+[engines]
+# smtbmc routes through an SMT solver. boolector is the fast default for RTL.
+smtbmc boolector
+
+[script]
+nofullski: read -define NO_FULL_SKIP=1
+noverific: read -noverific
+# Read in formal mode — activates ifdef FORMAL blocks in the design
+read -formal -sv async_fifo.sv
+# Elaborate and set the top-level module
+prep -top async_fifo
+
+[files]
+# Files copied into SymbiYosys's working directory before the run
+async_fifo.sv
